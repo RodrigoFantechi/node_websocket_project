@@ -18,7 +18,16 @@
         ws.onopen = () => {
             console.log('connection opened!');
         }
-        ws.onmessage = ({ data }) => showMessage(data);
+        ws.addEventListener("message", event => {
+            if (event.data instanceof Blob) {
+                reader = new FileReader();
+                reader.onload = () => {
+                    showMessage(reader.result)
+                };
+                reader.readAsText(event.data);
+            }
+        });
+
         ws.onclose = function () {
             ws = null;
         }
